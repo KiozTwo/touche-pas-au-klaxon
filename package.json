@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "scripts": {"build:css": "sass --load-path=node_modules public/assets/style.scss public/assets/style.css --style=compressed"},
+  "devDependencies": {"bootstrap": "^5.3.3", "sass": "^1.80.0"}
+}

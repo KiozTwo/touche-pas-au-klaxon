@@ -1,0 +1,9 @@
+AGENCE(id PK, nom UNIQUE)
+UTILISATEUR(id PK, nom, prenom, telephone, email UNIQUE, empreinte_mot_de_passe, role)
+TRAJET(id PK, id_agence_depart FK -> AGENCE.id, id_agence_arrivee FK -> AGENCE.id,
+       depart_at, arrivee_at, places_totales, places_disponibles,
+       id_auteur FK -> UTILISATEUR.id, created_at)
+Cardinalités : une agence est le départ de 0..N trajets et l'arrivée de 0..N trajets ;
+un trajet a exactement une agence de départ et une agence d'arrivée.
+Un utilisateur propose 0..N trajets ; un trajet a exactement un auteur.
+Aucune table de réservation : elle n'est pas demandée par la première version du brief.

@@ -1,0 +1,8 @@
+/* Compiled local overrides corresponding to style.scss; Bootstrap's base CSS loads first. */
+:root { --bs-dark: #303840; --bs-secondary: #687580; --bs-body-color: #202830; }
+.navbar { background: #f3f5f7; }
+.table { border-radius: .75rem; overflow: hidden; }
+.table-dark { --bs-table-bg: #303840; }
+.btn-dark { --bs-btn-bg: #303840; --bs-btn-border-color: #303840; }
+.btn-secondary { --bs-btn-bg: #687580; --bs-btn-border-color: #687580; }
+.form-card { max-width: 780px; padding: 1.25rem; border: 1px solid #d9e0e5; border-radius: .75rem; background: #fff; }
