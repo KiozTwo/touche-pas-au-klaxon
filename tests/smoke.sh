@@ -3,7 +3,7 @@
 set -euo pipefail
 work_dir="$(mktemp -d)"
 server_pid=''
-cleanup() { local result=$?; if [[ "$result" -ne 0 ]]; then echo 'Smoke test diagnostic:'; tail -30 "$work_dir/server.log" 2>/dev/null || true; for f in login.html home.html; do if [[ -f "$work_dir/$f" ]]; then echo "$f: $(wc -c < "$work_dir/$f") bytes"; fi; done; fi; if [[ -n "$server_pid" ]]; then kill "$server_pid" 2>/dev/null || true; fi; rm -rf "$work_dir"; }
+cleanup() { local result=$?; if [[ "$result" -ne 0 ]]; then echo 'Smoke test diagnostic:'; tail -30 "$work_dir/server.log" 2>/dev/null || true; for f in login.html home.html create.html; do if [[ -f "$work_dir/$f" ]]; then echo "$f: $(wc -c < "$work_dir/$f") bytes"; fi; done; fi; if [[ -n "$server_pid" ]]; then kill "$server_pid" 2>/dev/null || true; fi; rm -rf "$work_dir"; }
 trap cleanup EXIT
 smoke_password="$(openssl rand -hex 20)"
 export SMOKE_PASS="$smoke_password"
@@ -25,8 +25,9 @@ grep -q 'Créer un trajet' "$work_dir/home.html"
 echo "Authenticated homepage rendered"
 start="$(date -u -d '+2 days' '+%Y-%m-%dT%H:%M')"
 end="$(date -u -d '+2 days 2 hours' '+%Y-%m-%dT%H:%M')"
-status="$(curl -sS -b "$work_dir/cookies" -o /dev/null -w '%{http_code}' -d "_csrf=$csrf" -d 'departure_agency_id=1' -d 'arrival_agency_id=2' --data-urlencode "departure_at=$start" --data-urlencode "arrival_at=$end" -d 'total_seats=4' -d 'available_seats=3' http://127.0.0.1:8765/trips)"
+status="$(curl -sS -b "$work_dir/cookies" -o "$work_dir/create.html" -w '%{http_code}' -d "_csrf=$csrf" -d 'departure_agency_id=1' -d 'arrival_agency_id=2' --data-urlencode "departure_at=$start" --data-urlencode "arrival_at=$end" -d 'total_seats=4' -d 'available_seats=3' http://127.0.0.1:8765/trips)"
 echo "Create HTTP status: $status"
+if [[ "$status" != 303 ]]; then sed -n 's/.*role="alert">\([^<]*\)<.*/Validation: \1/p' "$work_dir/create.html"; fi
 [[ "$status" == 303 ]]
 count="$(mysql -N -h 127.0.0.1 -u root -proot klaxon_test -e "SELECT COUNT(*) FROM trips WHERE author_id=(SELECT id FROM users WHERE email='smoke@example.test')")"
 [[ "$count" == 1 ]]
