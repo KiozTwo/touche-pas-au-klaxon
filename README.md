@@ -5,7 +5,7 @@ Application de covoiturage sur l'intranet d'une entreprise, réalisée en PHP 8.
 ## Prérequis
 
 - PHP 8.2+ avec extensions `pdo_mysql` et `mbstring`, Composer 2 ; MySQL 8.0+ ou MariaDB 10.6+.
-- Accès réseau au CDN Bootstrap (`cdn.jsdelivr.net`) dans cette version ; pour un intranet isolé, compiler Sass et servir Bootstrap localement.
+- Bootstrap et son JavaScript sont inclus dans `public/assets/` ; aucune connexion externe nécessaire pour afficher le site.
 - Serveur web pointant exclusivement vers `public/` ; ne jamais exposer `.env`, `sql/`, `src/` ou `vendor/`.
 
 ## Installation en local
@@ -42,21 +42,21 @@ composer test
 composer analyse
 ```
 
-`TripValidatorTest` teste les rejets et l'acceptation des règles métier. `RepositoryWriteTest` exécute les créations, mises à jour et suppressions d'agences et de trajets dans une transaction annulée en fin de test. Créer d'abord une **base dédiée**, par exemple `klaxon_test`, avec le schéma (modifier la première ligne `USE klaxon;` en `USE klaxon_test;` et créer cette base), puis définir `TEST_DB_NAME=klaxon_test` pour lancer le test d'intégration. Le test est ignoré sans cette variable. Installer les dépendances de développement avec `composer install` (sans `--no-dev`). Le workflow `.github/workflows/quality.yml` exécute ces contrôles avec PHP 8.3 et MySQL 8 à chaque publication. Les commandes locales nécessitent PHP et Composer.
+`TripValidatorTest` teste les rejets et l'acceptation des règles métier. `RepositoryWriteTest` exécute les créations, mises à jour et suppressions d'agences et de trajets dans une transaction annulée en fin de test. Créer d'abord une **base dédiée**, par exemple `klaxon_test`, avec le schéma (modifier la première ligne `USE klaxon;` en `USE klaxon_test;` et créer cette base), puis définir `TEST_DB_NAME=klaxon_test` pour lancer le test d'intégration. Le test est ignoré sans cette variable. Installer les dépendances de développement avec `composer install` (sans `--no-dev`). Le workflow `.github/workflows/quality.yml` exécute la syntaxe PHP, PHPUnit, PHPStan, la compilation Sass et un parcours HTTP de connexion, création et contrôle de propriété avec PHP 8.3 et MySQL 8 à chaque publication. Les commandes locales nécessitent PHP et Composer.
 
 ## Sass
 
-`public/assets/style.scss` définit les variables Bootstrap avant son import. Pour compiler après `npm install` :
+`public/assets/style.scss` définit les six couleurs imposées par le brief dans les variables Bootstrap avant son import. Le CSS compilé et le JavaScript Bootstrap sont déjà fournis dans `public/assets/`. Pour reconstruire le CSS :
 
 ```bash
 npm run build:css
 ```
 
-La feuille `public/assets/style.css` incluse dans le dépôt fournit déjà les surcharges de la palette. La compilation Sass est recommandée avant production pour obtenir le CSS Bootstrap local et éliminer la dépendance au CDN (retirer alors la balise CDN dans `views/layout.php`).
+La feuille `public/assets/style.css` contient le CSS Bootstrap compilé avec la palette du brief. Le code JavaScript Bootstrap est servi localement pour les fenêtres modales.
 
 ## Modèle des données
 
-Le MCD est dans `docs/MCD.pdf` et le MLD textuel dans `docs/MLD.txt`. Une agence participe à 0..N trajets comme départ et à 0..N trajets comme arrivée ; chaque trajet possède exactement un départ, une arrivée et un auteur. Les employés ne sont jamais modifiables via l'application. La réservation de place n'est pas dans le périmètre de cette première version.
+Le MCD est dans `docs/MCD.pdf` et intégré au livrable PDF ; le MLD textuel est dans `docs/MLD.txt`. Une agence participe à 0..N trajets comme départ et à 0..N trajets comme arrivée ; chaque trajet possède exactement un départ, une arrivée et un auteur. Les employés ne sont jamais modifiables via l'application. La réservation de place n'est pas dans le périmètre de cette première version.
 
 ## Mise en ligne du dépôt
 

@@ -25,6 +25,12 @@ jobs:
           coverage: none
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
+      - name: Build and verify local Bootstrap assets
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build:css 2>/dev/null
+          git diff --exit-code -- public/assets/style.css
+          cmp node_modules/bootstrap/dist/js/bootstrap.bundle.min.js public/assets/bootstrap.bundle.min.js
       - name: Load test database
         run: sed 's/USE klaxon;/USE klaxon_test;/' sql/schema.sql | mysql -h 127.0.0.1 -u root -proot
       - name: PHP syntax
@@ -36,5 +42,7 @@ jobs:
           DB_USER: root
           DB_PASSWORD: root
         run: composer test
+      - name: HTTP smoke test
+        run: bash tests/smoke.sh
       - name: PHPStan
         run: composer analyse

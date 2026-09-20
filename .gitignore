@@ -1,3 +1,6 @@
 /vendor/
 /.env
 /.phpunit.cache/
+
+/node_modules/
+/public/assets/style.css.map

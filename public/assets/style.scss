@@ -1,7 +1,12 @@
-$dark: #303840;
-$secondary: #687580;
-$light: #f3f5f7;
-$body-color: #202830;
+// Palette imposée par le brief ; ces variables sont surchargées avant Bootstrap.
+$light: #f1f8fc;
+$primary: #0074c7;
+$info: #00497c;
+$dark: #384050;
+$danger: #cd2c2e;
+$success: #82b864;
+$secondary: #00497c;
+$body-color: #384050;
 @import "bootstrap/scss/bootstrap";
 .navbar { background: $light; }
 .table { border-radius: .75rem; overflow: hidden; }

@@ -83,7 +83,7 @@ final class AppController
         $this->requireUser();
         $trip = $this->trips->find($id);
         $this->authorizeTrip($trip);
-        $this->render('trip-form', ['trip' => $trip, 'agencies' => $this->agencies->all(), 'action' => '/trips/' . $id]);
+        $this->render('trip-form', ['trip' => $trip, 'contact' => $this->users->find((int) $trip['author_id']), 'agencies' => $this->agencies->all(), 'action' => '/trips/' . $id]);
     }
 
     private function saveTrip(?int $id): void
@@ -100,7 +100,7 @@ final class AppController
         }
         if ($errors !== []) {
             http_response_code(422);
-            $this->render('trip-form', ['errors' => $errors, 'trip' => $_POST, 'agencies' => $this->agencies->all(), 'action' => $id === null ? '/trips' : '/trips/' . $id]);
+            $this->render('trip-form', ['errors' => $errors, 'trip' => $_POST, 'contact' => $id === null ? null : $this->users->find((int) ($this->trips->find($id)['author_id'] ?? 0)), 'agencies' => $this->agencies->all(), 'action' => $id === null ? '/trips' : '/trips/' . $id]);
             return;
         }
         if ($id === null) {
