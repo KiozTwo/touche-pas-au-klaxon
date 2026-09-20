@@ -48,5 +48,23 @@ jobs:
         run: |
           sed 's/USE klaxon;/USE klaxon_test;/' sql/seed.sql | mysql -h 127.0.0.1 -u root -proot
           test "$(mysql -N -h 127.0.0.1 -u root -proot klaxon_test -e 'SELECT COUNT(*) FROM users')" = 23
+      - name: Capture real browser pages
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock --no-audit --no-fund playwright-core@1.55.1
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          export VISUAL_PASS="$(openssl rand -hex 20)"
+          visual_hash="$(php -r 'echo password_hash(getenv("VISUAL_PASS"), PASSWORD_DEFAULT);')"
+          mysql -h 127.0.0.1 -u root -proot klaxon_test -e "INSERT INTO users(last_name,first_name,phone,email,password_hash,role) VALUES ('Demo','Visuel','0000000000','visual@example.test','$visual_hash','employee'),('Demo','Admin','0000000000','visualadmin@example.test','$visual_hash','admin');"
+          DB_NAME=klaxon_test DB_HOST=127.0.0.1 DB_USER=root DB_PASSWORD=root php -S 127.0.0.1:8766 -t public public/router.php > /tmp/klaxon-visual-server.log 2>&1 &
+          trap 'kill $! 2>/dev/null || true' EXIT
+          for i in {1..20}; do if curl -fsS http://127.0.0.1:8766/ -o /dev/null; then break; fi; sleep .5; done
+          node tests/visual.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: captures-visuelles
+          path: visual-captures/*.png
+          if-no-files-found: ignore
       - name: PHPStan
         run: composer analyse
