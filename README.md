@@ -19,7 +19,7 @@ mysql -u root -p < sql/seed.sql
 php -S 127.0.0.1:8000 -t public public/router.php
 ```
 
-Créer un utilisateur MySQL avec des droits `SELECT, INSERT, UPDATE, DELETE` sur `klaxon.*` puis mettre ses identifiants dans `.env`. Les scripts SQL sont appliqués avec un compte capable de créer la base. Visiter `http://127.0.0.1:8000/`. L'horloge PHP utilise `APP_TIMEZONE=Europe/Paris` et la connexion SQL reprend le décalage horaire courant. Le jeu d'essai crée deux trajets futurs et charge les 12 villes et 20 employés fictifs de même structure que les données fournies. Rejouer `seed.sql` insère deux trajets supplémentaires ; importer dans une base neuve pour retrouver exactement deux trajets.
+Créer un utilisateur MySQL avec des droits `SELECT, INSERT, UPDATE, DELETE` sur `klaxon.*` puis mettre ses identifiants dans `.env`. Les scripts SQL sont appliqués avec un compte capable de créer la base. Visiter `http://127.0.0.1:8000/`. L'horloge PHP utilise `APP_TIMEZONE=Europe/Paris` et la connexion SQL reprend le décalage horaire courant. Le jeu d'essai crée deux trajets futurs et charge les 12 villes et 20 employés fictifs fournis dans l’annexe. Rejouer `seed.sql` insère deux trajets supplémentaires ; importer dans une base neuve pour retrouver exactement deux trajets.
 
 Les comptes administrateur et employé de démonstration sont décrits dans le livrable PDF remis séparément. Leurs mots de passe initiaux forts ne figurent pas dans le dépôt. Les autres comptes importés ont chacun un mot de passe initial aléatoire inconnu ; une réinitialisation par l’équipe informatique serait nécessaire en usage réel.
 
