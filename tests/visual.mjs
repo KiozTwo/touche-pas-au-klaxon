@@ -25,8 +25,8 @@ try {
   await page.getByRole('heading', { name: 'Trajets proposés' }).waitFor();
   await page.screenshot({ path: 'visual-captures/02-employe.png' });
   await page.getByRole('button', { name: 'Détails' }).first().click();
-  await page.getByRole('heading', { name: 'Détails du trajet' }).waitFor();
-  await page.screenshot({ path: 'visual-captures/03-details.png' });
+  await page.locator('.modal.show').waitFor();
+  await page.screenshot({ path: 'visual-captures/03-details.png', animations: 'disabled' });
   await page.getByRole('button', { name: 'Fermer' }).last().click();
 
   await page.getByRole('link', { name: 'Créer un trajet' }).click();
