@@ -47,6 +47,6 @@ jobs:
       - name: Import initial sample data
         run: |
           sed 's/USE klaxon;/USE klaxon_test;/' sql/seed.sql | mysql -h 127.0.0.1 -u root -proot
-          test "$(mysql -N -h 127.0.0.1 -u root -proot klaxon_test -e 'SELECT COUNT(*) FROM users')" = 22
+          test "$(mysql -N -h 127.0.0.1 -u root -proot klaxon_test -e 'SELECT COUNT(*) FROM users')" = 23
       - name: PHPStan
         run: composer analyse
